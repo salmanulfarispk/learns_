@@ -1,9 +1,9 @@
-import express, { query } from "express"
+import express from "express"
 import mongoose from "mongoose";
 import User from "./model/userModel.js"
 import bcrypt from "bcryptjs"
 import cors from "cors"
-const app = express();
+import {app,server} from "./socket/index.js"
 const port = 8000;
 
 
@@ -17,8 +17,14 @@ async function main(){
 }
 
  
-app.use(cors())
+app.use(cors({
+  origin:"http://localhost:5173",
+  methods: ['GET','POST'],
+  credentials: true
+}))
+
 app.use(express.json())
+
 
 app.post('/logs', async(req, res) => {
     const {name,email,password}=req.body;
@@ -83,6 +89,6 @@ app.get("/allusers",async(req,res)=>{
 
 
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });

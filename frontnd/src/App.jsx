@@ -46,9 +46,15 @@ function App() {
 
   return (
     <div className="p-20">
-      <div className="mb-7">
+      <div className="mb-7 w-full flex justify-between ">
         <h1 className="font-semibold text-3xl">All users ({count})</h1>
+        <button className="p-3 rounded-md bg-green-700 text-white cursor-pointer" onClick={()=> navigate("/message")}>
+          To Mesage
+        </button>
       </div>
+      
+  
+      
 
       {/**cards */}
       <div className="mb-7 max-h-[500px] overflow-y-scroll space-y-4">
