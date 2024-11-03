@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 import User from "./model/userModel.js"
 import bcrypt from "bcryptjs"
 import cors from "cors"
+import dotenv from "dotenv"
+dotenv.config();
 import {app,server} from "./socket/index.js"
+import jwt from "jsonwebtoken";
+import authUser from "./middleware/auth.js"
 const port = 8000;
 
 
@@ -26,32 +30,60 @@ app.use(cors({
 app.use(express.json())
 
 
-app.post('/logs', async(req, res) => {
-    const {name,email,password}=req.body;
 
+
+app.post('/register', async(req, res) => {
+    const {name,email,password}=req.body;
+    
     const existuser=await User.findOne({email});
     if(existuser){
-      res.json({message:"already existed user"})
+      return res.json({message:"already existed user"})
     }
 
     const salt= 10;
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser= new User({
+    const newUser= new User({ 
       name,email,password:hashedPassword
     })
 
-    await newUser.save()
+     await newUser.save()
 
     return res.json({
       success:true,
-      message:"new user created!"
+      message:"new user created!",
     })
-});
+}); 
+
+app.post("/login",async(req,res)=>{
+  const {email,password}=req.body;
+  const user=await User.findOne({email})
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "user doesn't exists...",
+    });
+  }
+  
+  const isMatchPass= await bcrypt.compare(password,user.password)
+  if (isMatchPass) {
+    const token= jwt.sign({_id: user._id},process.env.JWT_SECRET,{expiresIn:'2d'})
+    return res.json({
+      success: true,
+      user,
+      token
+    });
+  } else {
+    return res.json({
+      success: false,
+      message: "invalid password....",
+    });
+  }
+  
+})
 
 
-
-app.get("/allusers",async(req,res)=>{
+app.get("/allusers",authUser,async(req,res)=>{
   
   const limit = 10; 
   const page = parseInt(req.query.page) || 1;

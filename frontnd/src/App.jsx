@@ -3,7 +3,7 @@ import { useNavigate,useLocation} from "react-router-dom"
 
 
 
-const backendUrl= import.meta.env.VITE_BACKEND_URL;
+export const backendUrl= import.meta.env.VITE_BACKEND_URL;
 
 function App() {
 
@@ -26,7 +26,16 @@ function App() {
 
   const AllUsers=async(page)=>{
 
-    const response=await fetch(backendUrl+`/allusers?page=${page}`)
+    const token=localStorage.getItem('token')
+    if(!token){
+      navigate('/login',{replace:true})
+    }
+     
+    const response=await fetch(backendUrl+`/allusers?page=${page}`,{
+      headers:{
+        token
+      }
+    })
 
     const data=await response.json()
     if(data.success){
@@ -42,15 +51,25 @@ function App() {
     setCurrentPage(page)
     navigate(`?page=${page}`)
   }
+
+  const handleLogout=()=>{
+    localStorage.removeItem('token')
+    navigate('/login', { replace: true });
+  }
    
 
   return (
     <div className="p-20">
       <div className="mb-7 w-full flex justify-between ">
         <h1 className="font-semibold text-3xl">All users ({count})</h1>
+        <div className="inline-block space-x-2">
         <button className="p-3 rounded-md bg-green-700 text-white cursor-pointer" onClick={()=> navigate("/message")}>
           To Mesage
         </button>
+        <button className="p-3 rounded-md bg-red-700 text-white cursor-pointer" onClick={handleLogout}>
+          Logout
+        </button>
+        </div>
       </div>
       
   

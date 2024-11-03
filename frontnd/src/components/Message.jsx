@@ -47,6 +47,9 @@ const [AllMessage,setAllMessage]=useState([])
        <div className='w-full h-28 flex items-center justify-center'>
         <h1 className='text-5xl font-serif tracking-wide'>Welcome to ChatRoom </h1>
        </div>
+       <div className='w-full flex items-center justify-center'>
+        <h1 className='text-2xl font-serif tracking-wider'>Total message send by me <span>{3}</span></h1>
+       </div>
 
         <div className='mx-auto pt-16 grid grid-cols-1 md:grid-cols-2 gap-x-10'>
 
@@ -88,6 +91,8 @@ const [AllMessage,setAllMessage]=useState([])
              </div>
            </div>
         </div>
+
+        
 
     </div>
   )
