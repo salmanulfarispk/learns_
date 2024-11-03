@@ -55,7 +55,7 @@ app.get("/allusers",async(req,res)=>{
   
   const limit = 10; 
   const page = parseInt(req.query.page) || 1;
-  const skip = (page - 1) * limit; //if page is 2 then it 2-1=1 * 10 ,means it skips 10 items ans starts from 11-20
+  const skip = (page - 1) * limit; //if page is 2 then it 2-1=1 * 10 ,means it skips 10 items and starts from 11-20
 
   try {
   
